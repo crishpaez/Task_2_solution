@@ -17,6 +17,10 @@ namespace TaskClient.Controllers
         {
             return View();
         }
+        public IActionResult Client()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
