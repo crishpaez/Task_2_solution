@@ -10,13 +10,19 @@ namespace TaskClient.Controllers
         {
             this.ctx = ctx;
         }
-        public IActionResult ClientList(string name)
+        [HttpGet]
+        public IActionResult ClientList(string value)
         {
             var mdl = new ClientListModel();
+            var query = ctx.Clients.AsQueryable();
+            if (!string.IsNullOrEmpty(value))
+            {
+                query = query.Where(x=>x.Name.Contains(value));
+            }
             mdl.ClientList = ctx.Clients.ToList();
-            return View(name);
+            return View(mdl);
         }
-        
+
         [HttpDelete]
         public ActionResult<Client> Delete(int? id)
         {
@@ -32,7 +38,7 @@ namespace TaskClient.Controllers
             ctx.Clients.Remove(client);
             ctx.SaveChanges();
             return RedirectToAction("ClientList");
-        }        
+        }
         [HttpPost]
         public IActionResult Update(Client client)
         {
@@ -68,10 +74,10 @@ namespace TaskClient.Controllers
         {
             if (!string.IsNullOrEmpty(id))
             {
-                int Id = 0;               
-                if (int.TryParse(id,out Id))
+                int Id = 0;
+                if (int.TryParse(id, out Id))
                 {
-                    ctx.Clients.Add(new Client { Id=Id,Name=name, Address = address, PhoneNumber = phoneNumber, CUIT = cuit});
+                    ctx.Clients.Add(new Client { Id = Id, Name = name, Address = address, PhoneNumber = phoneNumber, CUIT = cuit });
                     ctx.SaveChanges();
                 }
             }
